@@ -112,15 +112,16 @@ function remove() {
 }
 
 function use() {
-echo "$1 list
+local prog=$(basename $1)
+echo "$prog list
 	lists all availible options
-$1 fetch "url"
+$prog fetch "url"
 	downloads script from url and saves it
-$1 run <alias> [arguments]
+$prog run <alias> [arguments]
 	runs some script
-$1 explain <alias> [arguments]
+$prog explain <alias> [arguments]
 	prints description and url we used to download this script
-$1 remove <alias>
+$prog remove <alias>
 	removes some script
 ";
 }

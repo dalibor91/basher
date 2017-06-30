@@ -44,7 +44,8 @@ function fetch() {
 		local scr_path="${BASER_DIR}/scripts/${date}.sh"
 
 		echo "Downlaoded from" >> "$log_path"
-		echo $1 > "$log_path"
+		echo $1 >> "$log_path"
+		echo "--------------------------" >> "$log_path"
 		echo "Description: "
 		read -r entered_desc
 		echo $entered_desc >> "${log_path}"
@@ -69,16 +70,58 @@ function fetch() {
 	fi;
 }
 
+function get_log() {
+        if [ ! $1 == "" ];
+        then
+                local al_loc="${BASER_DIR}/aliases/${1}"
+                if [ -f "${al_loc}" ];
+                then
+                        local abs_path=$(readlink "$al_loc")
+			local abs_path=$(basename "$abs_path")
+                        local file_name="${abs_path%.*}"
+                        if [ -f "${BASER_DIR}/scripts/${file_name}.log" ];
+			then
+				echo "${BASER_DIR}/scripts/${file_name}.log"
+			fi
+                fi
+        fi
+}
+
+function explain() {
+
+	AL=$(get_log $1)
+
+	if [ ! "$AL" == "" ];
+	then
+		cat "$AL";
+	fi
+}
+
+function remove() {
+	local log_file=$(get_log $1)
+	if [ -f "${log_file}" ];
+	then
+		rm "${log_file}"
+		local scr_file=$(readlink "${BASER_DIR}/aliases/$1")
+		rm "${BASER_DIR}/aliases/$1"
+		rm "${scr_file}"
+		echo "Removed!"
+	else
+		echo "Not found!"
+	fi;
+}
+
 function use() {
-echo "
-	$1 list
-		lists all availible options
-	$1 fetch "url"
-		downloads script from url and saves it
-	$1 run <alias> [arguments]
-		runs some script
-
-
+echo "$1 list
+	lists all availible options
+$1 fetch "url"
+	downloads script from url and saves it
+$1 run <alias> [arguments]
+	runs some script
+$1 explain <alias> [arguments]
+	prints description and url we used to download this script
+$1 remove <alias>
+	removes some script
 ";
 }
 
@@ -106,6 +149,12 @@ then
 elif [ "$1" == "add" ];
 then
 	fetch $2
+elif [ "$1" == "explain" ];
+then
+	explain $2
+elif [ "$1" == "remove" ];
+then
+	remove $2
 else
 	use $0
 fi;

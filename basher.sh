@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 BASER_DIR=$(echo ~)
 BASER_DIR="${BASER_DIR}/.basher"
 
@@ -115,7 +114,7 @@ function use() {
 local prog=$(basename $1)
 echo "$prog list
 	lists all availible options
-$prog fetch "url"
+$prog add "url"
 	downloads script from url and saves it
 $prog run <alias> [arguments]
 	runs some script
@@ -126,8 +125,6 @@ $prog remove <alias>
 ";
 }
 
-
-
 check $(dirname "${BASER_DIR}")
 
 if [ "$1" == "run" ];
@@ -137,10 +134,12 @@ then
 		print "Alias does not exists"
 	fi;
 
+	bash_script=$(readlink "${BASER_DIR}/aliases/${2}")
+
 	shift
 	shift
 
-	/bin/bash $(readlink "${BASER_DIR}/aliases/${2}") $@
+	eval "/bin/bash ${bash_script} $@"
 elif [ "$1" == "list" ];
 then
 	for al in $(ls "${BASER_DIR}/aliases/");

@@ -11,7 +11,7 @@ sudo chmod +x /var/lib/basher/basher && \
 sudo ln -s /var/lib/basher/basher /usr/bin/basher
 ```
 
-You can easy manage and download thousends of bash scripts and use then easily 
+You can easy manage and download thousands of bash scripts and use them easily 
 
 Example of use 
 Download test shell script 
@@ -31,7 +31,7 @@ Saving to: `/root/.basher/scripts/2017_06_30_17_38_07.sh'
 2017-06-30 17:38:12 (15.4 MB/s) - `/root/.basher/scripts/2017_06_30_17_38_07.sh' saved [98/98]
 
 Enter command name to run like:
-basher laskjd
+basher laskjd this is not valid 
 Enter command name to run like:
 basher_test
 ```

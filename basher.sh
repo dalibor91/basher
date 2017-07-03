@@ -153,7 +153,7 @@ $prog add "url"
 	downloads script from url and saves it
 $prog run <alias> [arguments]
 	runs some script
-$prog explain <alias> [arguments]
+$prog explain <alias>
 	prints description and url we used to download this script
 $prog remove <alias>
 	removes some script

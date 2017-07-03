@@ -75,7 +75,7 @@ basher add url
 	downloads script from url and saves it
 basher run <alias> [arguments]
 	runs some script
-basher explain <alias> [arguments]
+basher explain <alias>
 	prints description and url we used to download this script
 basher remove <alias>
 	removes some script

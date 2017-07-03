@@ -69,6 +69,41 @@ function fetch() {
 	fi;
 }
 
+function fetch_local() {
+        if [ -f "$1" ];
+        then
+                local date=$(date +"%Y_%m_%d_%H_%M_%S")
+                local log_path="${BASER_DIR}/scripts/${date}.log"
+                local scr_path="${BASER_DIR}/scripts/${date}.sh"
+
+                echo "Copied from" >> "$log_path"
+                echo $1 >> "$log_path"
+                echo "--------------------------" >> "$log_path"
+                echo "Description: "
+                read -r entered_desc
+                echo $entered_desc >> "${log_path}"
+
+                cp "$1" "${scr_path}"
+                dieOnFail $? "Unable to download script"
+
+                file_alias="-"
+                until [[ ! "$file_alias" =~ [^a-zA-Z0-9_] ]];
+                do
+                        echo "Enter command name to run like:"
+                        read -r file_alias
+                        if [ -f "${BASER_DIR}/aliases/${file_alias}" ];
+                        then
+                                echo "Alias already exists"
+                        fi
+                done
+
+
+                ln -s "${scr_path}" "${BASER_DIR}/aliases/${file_alias}"
+                dieOnFail $? "Unable to create symbolic link"
+        fi;
+}
+
+
 function get_log() {
         if [ ! $1 == "" ];
         then
@@ -148,7 +183,12 @@ then
 	done;
 elif [ "$1" == "add" ];
 then
-	fetch $2
+	if [[ "$2" =~ ^https?: ]];
+	then
+		fetch $2
+	else
+		fetch_local $2
+	fi
 elif [ "$1" == "explain" ];
 then
 	explain $2

@@ -196,9 +196,10 @@ then
 	eval "/bin/bash ${bash_script} $@"
 elif [ "$1" == "list" ];
 then
+	echo "Availible scripts:"
 	for al in $(ls "${BASER_DIR}/aliases/");
 	do
-		echo "Alias: ${al}"
+		echo -e "\t- ${al}"
 	done;
 elif [ "$1" == "add" ];
 then

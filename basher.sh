@@ -145,6 +145,22 @@ function remove() {
 	fi;
 }
 
+function update() {
+	local basher=$(which basher)
+	if [ ! "$basher" = "" ];
+	then
+		echo "Updating..."
+		local abspath=$(readlink "$basher")
+		curl -o "$abspath" https://raw.githubusercontent.com/dalibor91/basher/master/basher.sh
+		if [ $? -eq 0 ];
+		then
+			echo "Updated."
+		else
+			echo "Update failed"
+		fi
+	fi
+}
+
 function use() {
 local prog=$(basename $1)
 echo "$prog list
@@ -157,6 +173,10 @@ $prog explain <alias>
 	prints description and url we used to download this script
 $prog remove <alias>
 	removes some script
+$prog update
+	updates itself to the lates version
+	you have to run it as root
+	you must have curl installed
 ";
 }
 
@@ -195,6 +215,9 @@ then
 elif [ "$1" == "remove" ];
 then
 	remove $2
+elif [ "$1" == "update" ];
+then
+        update
 else
 	use $0
 fi;

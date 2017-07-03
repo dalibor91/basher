@@ -176,8 +176,7 @@ $prog remove <alias>
 $prog update
 	updates itself to the lates version
 	you have to run it as root
-	you must have curl installed
-";
+	you must have curl installed";
 }
 
 check $(dirname "${BASER_DIR}")

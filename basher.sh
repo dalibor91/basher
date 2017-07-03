@@ -131,7 +131,7 @@ if [ "$1" == "run" ];
 then
 	if [ ! -f "${BASER_DIR}/aliases/${2}" ];
 	then
-		print "Alias does not exists"
+		echo "Alias does not exists"
 	fi;
 
 	bash_script=$(readlink "${BASER_DIR}/aliases/${2}")

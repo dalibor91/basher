@@ -1,0 +1,23 @@
+#!/bin/bash
+
+#Script removes all local branches that do not match 
+#entered regex 
+
+branches='^dev$|^master$'
+
+read filterbranches
+
+if [ ! "$filterbranches" = "" ]; then 
+  branches=$filterbranches
+fi
+
+echo "Removing all local branches except $branhces"
+
+for branch in $(git branch | grep -ioE '([a-z0-9\_\-]+)'); 
+do 
+  if ! echo $branch | egrep '^dev$|^master$|^stage$|^integration$' > /dev/null; 
+  then 
+    git branch -D $branch; 
+  fi; 
+done;
+

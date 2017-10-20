@@ -15,7 +15,7 @@ echo "Removing all local branches except $branhces"
 
 for branch in $(git branch | grep -ioE '([a-z0-9\_\-]+)'); 
 do 
-  if ! echo $branch | egrep '^dev$|^master$|^stage$|^integration$' > /dev/null; 
+  if ! echo $branch | egrep $branhces > /dev/null; 
   then 
     git branch -D $branch; 
   fi; 

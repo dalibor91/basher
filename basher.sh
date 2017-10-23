@@ -271,6 +271,9 @@ function _process() {
     then 
         _action_run $options_run 
     fi
+    
+    if [ "$@" = "" ]; then _action_list; fi;
+    
 }
 
 #create directories 

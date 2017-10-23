@@ -5,10 +5,10 @@ simple bash program to easy run and add new shell scripts
 install 
 
 ```
-sudo mkdir /var/lib/basher && \
-sudo curl -o /var/lib/basher/basher https://raw.githubusercontent.com/dalibor91/basher/master/basher.sh && \
-sudo chmod +x /var/lib/basher/basher && \
-sudo ln -s /var/lib/basher/basher /usr/bin/basher
+sudo mkdir /var/lib/bshr && \
+sudo curl -o /var/lib/bshr/bshr https://raw.githubusercontent.com/dalibor91/basher/master/basher.sh && \
+sudo chmod +x /var/lib/bshr/bshr && \
+sudo ln -s /var/lib/bshr/bshr /usr/bin/bshr
 ```
 
 You can easy manage and download thousands of bash scripts and use them easily 
@@ -16,7 +16,7 @@ You can easy manage and download thousands of bash scripts and use them easily
 Example of use 
 Download test shell script 
 ```
-root@vg# basher add 'https://raw.githubusercontent.com/dalibor91/basher/master/basher_test.sh'
+root@vg# bshr -a 'https://raw.githubusercontent.com/dalibor91/basher/master/basher_test.sh'
 Description:
 basher test script
 --2017-06-30 17:38:12--  https://raw.githubusercontent.com/dalibor91/basher/master/basher_test.sh
@@ -38,13 +38,13 @@ basher_test
 
 To see all installed scripts run:
 ```
-root@vg# basher list
+root@vg# bshr --list
 Alias: basher_test
 ```
 
 To see details of some specific script run
 ```
-root@vg# basher explain basher_test
+root@vg# basher --explain basher_test
 Downlaoded from
 https://raw.githubusercontent.com/dalibor91/basher/master/basher_test.sh
 --------------------------
@@ -53,7 +53,7 @@ basher test script
 
 To run script run 
 ```
-root@vg# basher run basher_test 123 456 6789 000
+root@vg# bshr -r basher_test 123 456 6789 000
 Argument 0 /root/.basher/scripts/2017_06_30_17_38_07.sh
 Argument 1 123
 Argument 2 456
@@ -62,7 +62,7 @@ Argument 3 6789
 
 To remove script run
 ```
-root@vg# basher remove basher_test
+root@vg# bshr -d basher_test
 Removed!
 ```
 

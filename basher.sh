@@ -241,7 +241,7 @@ function _process() {
         then
             echo "Updating..."
             local abspath=$(readlink "$basher")
-            curl -o "$abspath" https://raw.githubusercontent.com/dalibor91/basher/master/basher.sh
+            curl -o "$abspath" "https://raw.githubusercontent.com/dalibor91/basher/master/basher.sh?timestamp=$(date +"%s")"
             if [ $? -eq 0 ];
             then
                 echo "Updated."

@@ -153,9 +153,17 @@ function _process() {
         -r|--remove  <alias>      - run script that you saved by some alias 
         -H|--host    <user@host>  - destination where to run script
         -e|--explain <alias>      - print description message
+	--args                    - pass arguments to script 
         --update                  - update basher
         -l                        - list all scripts
         -h                        - this message
+	
+    Exapmple:
+        bshr -a /tmp/test.sh						# adds script to bshr repository
+	bshr -r test 							# run script on localhost
+	bshr -r test -H root@192.168.0.100				# runs script as root on 192.168.0.100
+	bshr -r test --args "pass to script" "also this"		# passing arguments to local script
+	bsht -r test -H root@192.168.0.100 --args "additional" "arg"	# passing arguments to remote script
 "; 
     }
 

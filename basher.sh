@@ -166,7 +166,6 @@ function _process() {
 	--args                    - pass arguments to script 
         --update                  - update basher
 	--cleanup                 - clear all
-	--uninstall               - uninstall program
         -l                        - list all scripts
         -h                        - this message
 	

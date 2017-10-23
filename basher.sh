@@ -162,8 +162,8 @@ function _process() {
         bshr -a /tmp/test.sh
 	bshr -r test 
 	bshr -r test -H root@192.168.0.100
-	bshr -r test --args \"pass to script\" \"also this\"
-	bsht -r test -H root@192.168.0.100 --args \"additional" \"arg\"	
+	bshr -r test --args 'pass to script' 'also this'
+	bsht -r test -H root@192.168.0.100 --args 'additional' 'arg'	
 "; 
     }
 

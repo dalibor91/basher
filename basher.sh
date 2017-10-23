@@ -261,6 +261,8 @@ function _process() {
     then 
         echo "Updating..."
         _action_update
+	echo "Done updating"
+	exit 
     fi;
     if [ ! "$options_remote" = "" ]; 
     then 

@@ -15,6 +15,7 @@ options_aliases_dir="${options_home_dir}/aliases"
 options_describ_dir="${options_home_dir}/describe"
 options_global_log="${options_home_dir}/log"
 options_args=""
+options_all_args=$@
 
 function _log() {
     local msg=$(date +"[ %Y-%m-%d %H:%M:%S ] ")
@@ -272,7 +273,7 @@ function _process() {
         _action_run $options_run 
     fi
     
-    if [ "$@" = "" ]; then _action_list; fi;
+    if [ "${options_all_args}" = "" ]; then _action_list; fi;
     
 }
 

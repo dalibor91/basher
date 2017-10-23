@@ -8,7 +8,7 @@ install
 sudo mkdir /var/lib/bshr && \
 sudo curl -o /var/lib/bshr/bshr https://raw.githubusercontent.com/dalibor91/basher/master/basher.sh && \
 sudo chmod +x /var/lib/bshr/bshr && \
-sudo ln -s /var/lib/bshr/bshr /usr/bin/bshr
+sudo ln -s /var/lib/bshr/bshr /usr/local/bin/bshr
 ```
 
 You can easy manage and download thousands of bash scripts and use them easily 
@@ -68,15 +68,14 @@ Removed!
 
 To see all options run 
 ```
-root@vg# basher
-basher list
-	lists all availible options
-basher add url
-	downloads script from url and saves it
-basher run <alias> [arguments]
-	runs some script
-basher explain <alias>
-	prints description and url we used to download this script
-basher remove <alias>
-	removes some script
+root@vg# bshr -h
+BSHR is small script that enables you running and managing shell scripts with one command
+    bshr
+        -a|--add     <script>     - add script to basher, local or remote
+        -r|--remove  <alias>      - run script that you saved by some alias 
+        -H|--host    <user@host>  - destination where to run script
+        -e|--explain <alias>      - print description message
+        --update                  - update basher
+        -l                        - list all scripts
+        -h                        - this message
 ```

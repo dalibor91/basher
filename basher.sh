@@ -6,6 +6,7 @@ options_delete=""
 options_remote=""
 options_run=""
 options_explain=""
+options_edit=""
 options_list=0
 options_help=0
 options_update=0
@@ -56,7 +57,12 @@ function _parseParams() {
                shift
                shift
                ;;
-            -e|--explain)
+	    -e|--edit)
+	       options_edit=$2
+	       shift
+	       shift
+	       ;;
+            -E|--explain)
                options_explain=$2
                shift
                shift
@@ -118,6 +124,7 @@ function _addNewScript() {
     local descr="${options_describ_dir}/${file_alias}"
 
     echo "Added from ${2}" >> "${descr}"
+    echo "Added to ${1}" >> "${descr}"
 
     echo "Description: "
     read _descr
@@ -142,6 +149,7 @@ function _process() {
         echo "BSHR is small script that enables you running and managing shell scripts with one command
     bshr
         -a|--add     <script>     - add script to basher, local or remote
+        -e|--edit    <alias>      - edit script that you saved by some alias 
         -r|--remove  <alias>      - run script that you saved by some alias 
         -H|--host    <user@host>  - destination where to run script
         -e|--explain <alias>      - print description message
@@ -251,10 +259,22 @@ function _process() {
             fi
         fi
     }
-
+    
+    function _action_edit() {
+    	local script=$(_getAlias $1)
+	if [ "${script}" = "" ]; then echo "Alias not found"; exit 10; fi;
+	
+	if [ "$DEFAULT_EDITOR" ];
+	then 
+	   $DEFAULT_EDITOR "$script"
+	else 
+	   nano $script
+	fi
+    }
 
     if [ $options_help -eq 1 ]; then _action_help; fi;
     if [ $options_list -eq 1 ]; then _action_list; fi;
+    if [ ! "$options_edit" = "" ]; then _action_edit $options_edit; fi;
     if [ ! "$options_delete" = "" ]; then _action_remove $options_delete ; fi;
     if [ ! "$options_add" = "" ]; then _action_add $options_add ; fi;
     if [ ! "$options_explain" = "" ]; then _action_explain $options_explain ; fi;

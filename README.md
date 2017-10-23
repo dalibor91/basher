@@ -72,10 +72,19 @@ root@vg# bshr -h
 BSHR is small script that enables you running and managing shell scripts with one command
     bshr
         -a|--add     <script>     - add script to basher, local or remote
+        -e|--edit    <alias>      - edit script that you saved by some alias 
         -r|--remove  <alias>      - run script that you saved by some alias 
         -H|--host    <user@host>  - destination where to run script
         -e|--explain <alias>      - print description message
+        --args                    - pass arguments to script 
         --update                  - update basher
         -l                        - list all scripts
         -h                        - this message
+
+    Exapmple:
+        bshr -a /tmp/test.sh
+        bshr -r test 
+        bshr -r test -H root@192.168.0.100
+        bshr -r test --args 'pass to script' 'also this'
+        bsht -r test -H root@192.168.0.100 --args 'additional' 'arg'
 ```

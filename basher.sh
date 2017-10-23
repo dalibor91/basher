@@ -10,6 +10,8 @@ options_edit=""
 options_list=0
 options_help=0
 options_update=0
+options_cleanup=0
+options_uninstall=0
 options_home_dir="${HOME}/.bshr"
 options_scripts_dir="${options_home_dir}/scripts"
 options_aliases_dir="${options_home_dir}/aliases"
@@ -89,6 +91,14 @@ function _parseParams() {
                options_update=1
                shift
                ;;
+	    --cleanup)
+	       options_cleanup=1
+	       shift
+	       ;;
+	     --uninstall)
+	       options_uninstall=1
+	       shift
+	       ;;
             *)
                 #unknown 
                 #options_args="${options_args}${key} "
@@ -155,6 +165,8 @@ function _process() {
         -e|--explain <alias>      - print description message
 	--args                    - pass arguments to script 
         --update                  - update basher
+	--cleanup                 - clear all
+	--uninstall               - uninstall program
         -l                        - list all scripts
         -h                        - this message
 	
@@ -253,6 +265,7 @@ function _process() {
     }
 
     function _action_update() {
+    	_log "Action update()"
         local basher=$(which bshr)
         if [ ! "$basher" = "" ];
         then
@@ -269,6 +282,7 @@ function _process() {
     }
     
     function _action_edit() {
+    	_log "Action edit()"
     	local script=$(_getAlias $1)
 	if [ "${script}" = "" ]; then echo "Alias not found"; exit 10; fi;
 	
@@ -279,9 +293,30 @@ function _process() {
 	   nano $script
 	fi
     }
+    
+    function _action_cleanup() {
+    	_log "Action cleanup()"
+	echo "Are you sure? Y/n"
+    	if [[ "`read u; echo $u`" = [yY] ]]; then  
+	   rm -rf $options_home_dir
+	fi;
+    }
+    
+    function _action_uninstall() {
+    	_log "Action uninstall()"
+	echo "Are you sure? Y/n"
+    	if [[ "`read u; echo $u`" = [yY] ]]; then  
+	   local bshr=$(which bshr)
+	   local bshr_loc=$(readlink $bshr)
+	   rm $bshr
+	   rm -rf $(dirname $bshr_loc)
+	fi;
+    }
 
     if [ $options_help -eq 1 ]; then _action_help; fi;
     if [ $options_list -eq 1 ]; then _action_list; fi;
+    if [ $options_cleanup -eq 1 ]; then _action_cleanup; fi;
+    if [ $options_uninstall -eq 1 ]; then _action_uninstall; fi;
     if [ ! "$options_edit" = "" ]; then _action_edit $options_edit; fi;
     if [ ! "$options_delete" = "" ]; then _action_remove $options_delete ; fi;
     if [ ! "$options_add" = "" ]; then _action_add $options_add ; fi;

@@ -259,8 +259,8 @@ function _process() {
     if [ ! "$options_explain" = "" ]; then _action_explain $options_explain ; fi;
     if [ $options_update -eq 1 ]; 
     then 
-        echo "Do update"
-        #_action_update
+        echo "Updating..."
+        _action_update
     fi;
     if [ ! "$options_remote" = "" ]; 
     then 

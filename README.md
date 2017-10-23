@@ -81,7 +81,7 @@ BSHR is small script that enables you running and managing shell scripts with on
         -l                        - list all scripts
         -h                        - this message
 
-    Exapmple:
+    Example:
         bshr -a /tmp/test.sh
         bshr -r test 
         bshr -r test -H root@192.168.0.100

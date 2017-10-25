@@ -5,7 +5,7 @@
 
 br='^dev$|^master$'
 
-echo "Enter branhces"
+echo "Enter branhces to ignore regex"
 read filt
 
 if [ ! "$(echo $filt | xargs)" = "" ]; then

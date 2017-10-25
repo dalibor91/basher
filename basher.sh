@@ -163,11 +163,11 @@ function _process() {
         -r|--remove  <alias>      - run script that you saved by some alias 
         -H|--host    <user@host>  - destination where to run script
         -e|--explain <alias>      - print description message
+        -l|--list                 - list all scripts
+        -h|--help                 - this message
 	--args                    - pass arguments to script 
         --update                  - update basher
 	--cleanup                 - clear all
-        -l                        - list all scripts
-        -h                        - this message
 	
     Example:
         bshr -a /tmp/test.sh

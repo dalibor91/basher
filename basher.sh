@@ -351,24 +351,24 @@ _process
 if [ ! "${DEBUG_BSHR}" = "" ];
 then
 echo "
- options_add         = "${options_add}"                                                                                                                                                                                                                                                                                       
- options_delete      = "${options_delete}"                                                                                                                                                                                                                                                                                    
- options_remote      = "${options_remote}"                                                                                                                                                                                                                                                                                    
- options_run         = "${options_run}"                                                                                                                                                                                                                                                                                       
- options_explain     = "${options_explain}"                                                                                                                                                                                                                                                                                   
- options_edit        = "${options_edit}"                                                                                                                                                                                                                                                                                      
- options_list        = "${options_list}"                                                                                                                                                                                                                                                                                      
- options_help        = "${options_help}"                                                                                                                                                                                                                                                                                      
- options_update      = "${options_update}"                                                                                                                                                                                                                                                                                    
- options_cleanup     = "${options_cleanup}"                                                                                                                                                                                                                                                                                   
- options_uninstall   = "${options_uninstall}"                                                                                                                                                                                                                                                                                 
- options_home_dir    = "${options_home_dir}"                                                                                                                                                                                                                                                                                  
- options_scripts_dir = "${options_scripts_dir}"                                                                                                                                                                                                                                                                               
- options_aliases_dir = "${options_aliases_dir}"                                                                                                                                                                                                                                                                               
- options_describ_dir = "${options_describ_dir}"                                                                                                                                                                                                                                                                               
- options_global_log  = "${options_global_log}"                                                                                                                                                                                                                                                                                
- options_args        = "${options_args}"                                                                                                                                                                                                                                                                                      
- options_all_args    = "${options_all_args}"
+ options_add         = ${options_add}
+ options_delete      = ${options_delete}
+ options_remote      = ${options_remote}
+ options_run         = ${options_run}
+ options_explain     = ${options_explain}
+ options_edit        = ${options_edit}
+ options_list        = ${options_list}
+ options_help        = ${options_help}
+ options_update      = ${options_update}
+ options_cleanup     = ${options_cleanup}
+ options_uninstall   = ${options_uninstall}
+ options_home_dir    = ${options_home_dir}
+ options_scripts_dir = ${options_scripts_dir}
+ options_aliases_dir = ${options_aliases_dir}
+ options_describ_dir = ${options_describ_dir}
+ options_global_log  = ${options_global_log}
+ options_args        = ${options_args}
+ options_all_args    = ${options_all_args}
 ";
 fi
 

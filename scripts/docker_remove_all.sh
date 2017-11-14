@@ -13,5 +13,5 @@ fi
 
 if [ "$images" = "y" ];
 then
-  sudo docker images | awk '{ print $1 }' | grep -v 'CONTAINER' | sudo xargs docker rmi -f
+  sudo docker images | awk '{ print $3 }' | grep -v 'REPOSITORY' | sudo xargs docker rmi -f
 fi

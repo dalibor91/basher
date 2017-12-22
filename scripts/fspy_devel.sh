@@ -19,7 +19,7 @@ fi;
 echo "
 FROM debian:9
 RUN apt-get update
-RUN apt-get install -y git gcc vim
+RUN apt-get install -y git gcc vim make
 
 " > $tmp_docker
 

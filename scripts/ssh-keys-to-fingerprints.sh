@@ -4,12 +4,7 @@
 # of ssh authorized keys 
 # usefull when you want to check who logged in with key
 
-FILE="/home/`whoami`/.ssh/authorized_keys"
-
-if [ "`whoami`" = "root" ];
-then
-  FILE="/root/.ssh/authorized_keys"
-fi
+FILE="${HOME}/.ssh/authorized_keys"
 
 if [ ! "$1" = "" ];
 then 

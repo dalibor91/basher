@@ -6,6 +6,11 @@
 
 FILE="/home/`whoami`/.ssh/authorized_keys"
 
+if [ "`whoami`" = "root" ];
+then
+  FILE="/root/.ssh/authorized_keys"
+fi
+
 if [ ! "$1" = "" ];
 then 
   FILE="$1"

@@ -160,7 +160,8 @@ function _process() {
 bshr
      -a|--add     <script>     - add script to basher, local or remote
      -e|--edit    <alias>      - edit script that you saved by some alias 
-     -r|--remove  <alias>      - run script that you saved by some alias 
+     -r|--run     <alias>      - run script that you saved by some alias 
+     -d|--delete  <alias>      - deletes script 
      -H|--host    <user@host>  - destination where to run script
      -e|--explain <alias>      - print description message
      -l|--list                 - list all scripts

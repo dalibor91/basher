@@ -1,6 +1,18 @@
 #!/bin/bash 
 
-FILTER="reference=\"name=$1:$2\""
+NAME="*"
+if [ ! "$1" = "" ];
+then
+  NAME=$1
+fi
+
+TAG="*"
+if [ ! "$2" = "" ];
+then
+  TAG=$1
+fi
+
+FILTER="reference=\"name=${NAME}:${TAG}\""
 
 if [ "$1" = "" ];
 then 

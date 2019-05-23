@@ -28,8 +28,8 @@ then
   exit 3;
 fi
 
-cmd="zip -rq ${destination}/${zip_name} ${zip_source}"
+cmd="zip --symlinks -rq ${destination}/${zip_name} ${zip_source}"
 echo "Running: ${cmd}"
 
-eval $cmd
+eval $cmd >> "${destination}/ziping.log" 2>&1
 exit $?

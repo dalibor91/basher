@@ -36,7 +36,7 @@ echo "server {
   }
 
   location / {
-    try_files $uri $uri/ /index.php?$query_string;
+    try_files \$uri \$uri/ /index.php?\$query_string;
   }
 
   access_log /var/log/nginx/${domain}_access.log;

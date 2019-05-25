@@ -19,7 +19,7 @@ link_file="/etc/nginx/sites-enabled/${domain}"
 
 echo "server {
   listen 80;
-  listen [::]:80 ipv6only=on;
+  #listen [::]:80 ipv6only=on;
 
   root ${root_dir};
   index ${index_page};

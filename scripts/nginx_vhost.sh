@@ -27,12 +27,12 @@ echo "server {
   server_name ${domain} www.${domain};
   client_max_body_size 24m;
 
-  location ~ \.php$ {
-    fastcgi_split_path_info ^(.+\.php)(/.+)$;
+  location ~ \.php\$ {
+    fastcgi_split_path_info ^(.+\.php)(/.+)\$;
     include fastcgi_params;
-    fastcgi_param PATH_INFO $fastcgi_path_info;
+    fastcgi_param PATH_INFO \$fastcgi_path_info;
     fastcgi_index index.php;
-    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
     fastcgi_pass 127.0.0.1:9000;
   }
 

@@ -14,7 +14,7 @@ then
     index_page="index.html index.php"
 fi
 
-conf_file="/etc/nginx/sites-availible/${domain}"
+conf_file="/etc/nginx/sites-available/${domain}"
 link_file="/etc/nginx/sites-enabled/${domain}"
 
 echo "server {

@@ -209,10 +209,10 @@ bshr
      -l   | --list                 - list all scripts
      -h   | --help                 - this message
      -su  | --switch-user <user>   - run as this user (requires su permissions)
-     -env                          - load env variables from files
      -gtp | --git_pull <repo>      - pull repository with scrits
      -gps | --git_push [<repo>]    - push to repository
 
+     -env                          - load env variables from files
      --args                        - pass arguments to script
      --update                      - update basher
      --cleanup                     - clear all

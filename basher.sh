@@ -158,7 +158,7 @@ function _addNewScript() {
         file_alias=${ADD_ALIAS}
     fi
 
-    until [[ ! "$file_alias" =~ [^a-zA-Z0-9_] ]];
+    until [[ ! "$file_alias" =~ [^a-zA-Z0-9_\.] ]];
     do
         echo "Enter alias:"
         read -r file_alias

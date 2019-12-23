@@ -1,8 +1,8 @@
 # basher
-simple bash program to easy run and add new bash scripts 
+simple bash program to easy run and add new bash scripts
 
 
-install 
+install
 
 ```
 sudo mkdir /var/lib/bshr && \
@@ -11,10 +11,10 @@ sudo chmod +x /var/lib/bshr/bshr && \
 sudo ln -s /var/lib/bshr/bshr /usr/local/bin/bshr
 ```
 
-You can easy manage and download thousands of bash scripts and use them easily 
+You can easy manage and download thousands of bash scripts and use them easily
 
-Example of use 
-Download test shell script 
+Example of use
+Download test shell script
 ```
 root@vg# bshr -a 'https://raw.githubusercontent.com/dalibor91/basher/master/basher_test.sh'
 Description:
@@ -31,7 +31,7 @@ Saving to: `/root/.basher/scripts/2017_06_30_17_38_07.sh'
 2017-06-30 17:38:12 (15.4 MB/s) - `/root/.basher/scripts/2017_06_30_17_38_07.sh' saved [98/98]
 
 Enter command name to run like:
-basher laskjd this is not valid 
+basher laskjd this is not valid
 Enter command name to run like:
 basher_test
 ```
@@ -51,7 +51,7 @@ https://raw.githubusercontent.com/dalibor91/basher/master/basher_test.sh
 basher test script
 ```
 
-To run script run 
+To run script run
 ```
 root@vg# bshr -r basher_test 123 456 6789 000
 Argument 0 /root/.basher/scripts/2017_06_30_17_38_07.sh
@@ -66,25 +66,36 @@ root@vg# bshr -d basher_test
 Removed!
 ```
 
-To see all options run 
+To see all options run
 ```
 root@vg# bshr -h
 BSHR is small script that enables you running and managing shell scripts with one command
-    bshr
-        -a|--add     <script>     - add script to basher, local or remote
-        -e|--edit    <alias>      - edit script that you saved by some alias 
-        -r|--remove  <alias>      - run script that you saved by some alias 
-        -H|--host    <user@host>  - destination where to run script
-        -e|--explain <alias>      - print description message
-        --args                    - pass arguments to script 
-        --update                  - update basher
-        -l                        - list all scripts
-        -h                        - this message
+bshr
+     -a  | --add     <script>     - add script to basher, local or remote
+     -e  | --edit    <alias>      - edit script that you saved by some alias
+     -r  | --run     <alias>      - run script that you saved by some alias
+     -d  | --delete  <alias>      - deletes script
+     -H  | --host    <user@host>  - destination where to run script
+     -e  | --explain <alias>      - print description message
+     -l  | --list                 - list all scripts
+     -h  | --help                 - this message
+     -su | --switch-user <user>   - run as this user (requires su permissions)
+     -env                         - load env variables from files
+     --args                       - pass arguments to script
+     --update                     - update basher
+     --cleanup                    - clear all
 
-    Example:
-        bshr -a /tmp/test.sh
-        bshr -r test 
-        bshr -r test -H root@192.168.0.100
-        bshr -r test --args 'pass to script' 'also this'
-        bsht -r test -H root@192.168.0.100 --args 'additional' 'arg'
+
+Script can be added from remote url or locally. If alias and description not provided with env variables,
+program expect them from stdin.
+
+Example:
+    ADD_ALIAS=test ADD_DESCRIPTION=\"some test description\" bshr -a /tmp/test.sh
+    bshr -a /tmp/test.sh
+    bshr -e test # edits test script
+    DEFAULT_EDITOR=vim bshr -e test
+    bshr -r test
+    bshr -r test -H root@192.168.0.100
+    bshr -r test --args 'pass to script' 'also this'
+    bsht -r test -H root@192.168.0.100 --args 'additional' 'arg'
 ```

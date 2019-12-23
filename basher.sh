@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 
 options_add=""
@@ -19,6 +19,10 @@ options_describ_dir="${options_home_dir}/describe"
 options_global_log="${options_home_dir}/log"
 options_args=""
 options_all_args=$@
+options_env_file=""
+options_switch_user=""
+options_git_pull=""
+options_git_push=""
 
 function _log() {
     local msg=$(date +"[ %Y-%m-%d %H:%M:%S ] ")
@@ -28,9 +32,9 @@ function _log() {
 }
 
 function _dieOnFail() {
-    _log "_dieOnFail [ $1 ] [ $2 ]"
     if [ ! $1 -eq 0 ];
 	then
+        _log "_dieOnFail [ $1 ] [ $2 ]"
 		if [ ! "$2" = "" ]; then echo "$2"; fi
 		exit 1;
 	fi
@@ -48,7 +52,7 @@ function _parseParams() {
             break
         fi;
 
-        case $key in 
+        case $key in
             -a|--add)
                options_add=$2
                shift
@@ -59,16 +63,16 @@ function _parseParams() {
                shift
                shift
                ;;
-	    -e|--edit)
-	       options_edit=$2
-	       shift
-	       shift
-	       ;;
+            -e|--edit)
+               options_edit=$2
+               shift
+               shift
+               ;;
             -E|--explain)
                options_explain=$2
                shift
                shift
-               ;; 
+               ;;
             -H|--host)
                options_remote=$2
                shift
@@ -87,28 +91,56 @@ function _parseParams() {
                options_help=1
                shift
                ;;
+            -gtp|--git_pull)
+               options_git_pull=$2
+               shift
+               shift
+               ;;
+            -gps|--git_push)
+               if [ "$2" = "" ];
+               then
+                  options_git_push="-"
+               else
+                  options_git_push=$2
+               fi
+               shift
+               shift
+               ;;
+            -su|--switch-user)
+               options_switch_user=$2
+               shift
+               shift
+               ;;
             --update)
                options_update=1
                shift
                ;;
-	    --cleanup)
-	       options_cleanup=1
-	       shift
-	       ;;
-	     --uninstall)
-	       options_uninstall=1
-	       shift
-	       ;;
+            --env|-env)
+               options_env_file=$2
+               shift
+               shift
+               ;;
+	        --cleanup)
+	           options_cleanup=1
+	           shift
+	           ;;
+	        --uninstall)
+	           options_uninstall=1
+	           shift
+	           ;;
             *)
-                #unknown 
-                #options_args="${options_args}${key} "
-                echo "Unknown -> ${key}"
-                shift
-            ;;
+               _cmd=$1
+               shift
+               _args=$@
+               echo "${0} --run ${_cmd} --args ${_args}"
+               bash $0 --run $_cmd --args $_args
+               exit $?
+               ;;
         esac
     done;
 }
 
+# check if nececary directories exists
 function _checkDirectories() {
     if [ ! -d "$options_home_dir" ]; then mkdir "$options_home_dir"; _dieOnFail $? "Unable to create $options_home_dir"; fi;
     if [ ! -d "$options_scripts_dir" ]; then mkdir "$options_scripts_dir"; _dieOnFail $? "Unable to create $options_scripts_dir"; fi;
@@ -116,10 +148,16 @@ function _checkDirectories() {
     if [ ! -d "$options_describ_dir" ]; then mkdir "$options_describ_dir"; _dieOnFail $? " Unable to create $options_describ_dir"; fi;
 }
 
+# adds new script
 function _addNewScript() {
     _log "_addNewScript()"
 
     local file_alias="-"
+    if ! [ "${ADD_ALIAS}" = "" ];
+    then
+        file_alias=${ADD_ALIAS}
+    fi
+
     until [[ ! "$file_alias" =~ [^a-zA-Z0-9_] ]];
     do
         echo "Enter alias:"
@@ -136,15 +174,19 @@ function _addNewScript() {
     echo "Added from ${2}" >> "${descr}"
     echo "Added to ${1}" >> "${descr}"
 
-    echo "Description: "
-    read _descr
+    if ! [ "${ADD_DESCRIPTION}" = "" ];
+    then
+        local _descr="${ADD_DESCRIPTION}"
+    else
+        echo "Description: "
+        read _descr
+    fi
 
     echo "${_descr}" >> "${descr}"
 
-    ln -s "$1" "${options_aliases_dir}/${file_alias}" 
+    ln -s "$1" "${options_aliases_dir}/${file_alias}"
 
     _dieOnFail $? "Unable to add alias"
-    
 }
 
 function _getAlias() {
@@ -154,52 +196,66 @@ function _getAlias() {
 
 function _process() {
 
-    function _action_help() { 
+    function _action_help() {
         _log "Action help()"
         echo "BSHR is small script that enables you running and managing shell scripts with one command
 bshr
-     -a|--add     <script>     - add script to basher, local or remote
-     -e|--edit    <alias>      - edit script that you saved by some alias 
-     -r|--run     <alias>      - run script that you saved by some alias 
-     -d|--delete  <alias>      - deletes script 
-     -H|--host    <user@host>  - destination where to run script
-     -e|--explain <alias>      - print description message
-     -l|--list                 - list all scripts
-     -h|--help                 - this message
-     --args                    - pass arguments to script 
-     --update                  - update basher
-     --cleanup                 - clear all
+     -a   | --add     <script>     - add script to basher, local or remote
+     -e   | --edit    <alias>      - edit script that you saved by some alias
+     -r   | --run     <alias>      - run script that you saved by some alias
+     -d   | --delete  <alias>      - deletes script
+     -H   | --host    <user@host>  - destination where to run script
+     -E   | --explain <alias>      - print description message
+     -l   | --list                 - list all scripts
+     -h   | --help                 - this message
+     -su  | --switch-user <user>   - run as this user (requires su permissions)
+     -env                          - load env variables from files
+     -gtp | --git_pull <repo>      - pull repository with scrits
+     -gps | --git_push [<repo>]    - push to repository
+
+     --args                        - pass arguments to script
+     --update                      - update basher
+     --cleanup                     - clear all
+
+
+Script can be added from remote url or locally. If alias and description not provided with env variables,
+program expect them from stdin.
 
 Example:
-     bshr -a /tmp/test.sh
-     bshr -r test 
-     bshr -r test -H root@192.168.0.100
-     bshr -r test --args 'pass to script' 'also this'
-     bsht -r test -H root@192.168.0.100 --args 'additional' 'arg'	
-"; 
+    ADD_ALIAS=test ADD_DESCRIPTION=\"some test description\" bshr -a /tmp/test.sh
+    bshr -a /tmp/test.sh
+    bshr -e test # edits test script
+    DEFAULT_EDITOR=vim bshr -e test
+    bshr -r test
+    bshr -r test -H root@192.168.0.100
+    bshr -r test --args 'pass to script' 'also this'
+    bsht -r test -H root@192.168.0.100 --args 'additional' 'arg'
+";
     }
 
+    # adds script from url or from file
+    # $1 should be path to file
     function _action_add() {
         _log "Action add()"
         if [ "$1" = "" ]; then echo "Nothing to add"; exit 2; fi;
 
         local script_path=$1
-        local file_name=$(date +"%Y_%m_%d_%H_%M_%S.sh")
-        
+        local file_name="`date +"%Y_%m_%d_%H_%M_%S_%N"`_${RANDOM}.sh"
+
         if [[ "$script_path" =~ ^https?: ]];
-        then 
+        then
             local _curl=$(which curl)
             local _wget=$(which wget)
 
             if [ "${_curl}${_wget}" = "" ]; then echo "Curl or wget are needed for download"; exit 3; fi;
 
             if [ ! "${_curl}" = "" ];
-            then 
-                _log "Add via curl to ${file_name}" 
+            then
+                _log "Add via curl to ${file_name}"
                 curl -s $1 > "${options_scripts_dir}/${file_name}"; _dieOnFail $? "Unable to download from $2";
                 _addNewScript "${options_scripts_dir}/${file_name}" "$1"
             elif [ ! "$_wget" = "" ];
-            then 
+            then
                 _log "Add via wget to ${file_name}"
                 wget -O "${options_scripts_dir}/${file_name}" $1; _dieOnFail $? "Unable to download from $2"
                 _addNewScript "${options_scripts_dir}/${file_name}" "$1"
@@ -229,8 +285,8 @@ Example:
         rm "${options_aliases_dir}/${file_alias}"
         _log "rm $script"
         rm "$script"
-        if [ -f "${options_describ_dir}/${file_alias}" ]; 
-        then 
+        if [ -f "${options_describ_dir}/${file_alias}" ];
+        then
             _log "${options_describ_dir}/${file_alias}"
             rm "${options_describ_dir}/${file_alias}"
         fi
@@ -239,8 +295,8 @@ Example:
     function _action_explain() {
         _log "Action explain()"
         local file_alias=$1
-        if [ -f "${options_describ_dir}/${file_alias}" ]; 
-        then 
+        if [ -f "${options_describ_dir}/${file_alias}" ];
+        then
             _log "${options_describ_dir}/${file_alias}"
             cat "${options_describ_dir}/${file_alias}"
         fi
@@ -257,11 +313,36 @@ Example:
     }
 
     function _action_run() {
-        _log "Action run(${1})"
         local script=$(_getAlias $1)
         if [ "${script}" = "" ]; then echo "Alias not found"; exit 10; fi;
-        local bsh=$(which bash) 
-        eval "${bsh} ${script} ${options_args}" 
+        local bsh=$(which bash)
+
+        if [ "${options_switch_user}" = "" ];
+        then
+            _log "Action run(${1}) with arguments ${options_args}"
+            eval "${bsh} ${script} ${options_args}"
+        else
+            _log "Action run(${1}) as user ${options_switch_user} with arguments ${options_args}"
+            # copy script to tmp so other user can read it
+            _copy_script="/tmp/${options_switch_user}_`basename $script`"
+            cp ${script} ${_copy_script}
+            # make script readable
+            chmod o+x ${_copy_script}
+            su -s $bsh -c "${_copy_script} $options" $options_switch_user
+            # remove script at the end
+            rm ${_copy_script}
+        fi
+    }
+
+    function _load_env_vars() {
+        if ! [ "${options_env_file}" = "" ] && [ -f "${options_env_file}" ];
+        then
+            _log "Load env data from file ${options_env_file}"
+            while IFS= read -r line
+            do
+                eval "export $line"
+            done < "${options_env_file}"
+        fi
     }
 
     function _action_update() {
@@ -280,37 +361,79 @@ Example:
             fi
         fi
     }
-    
+
     function _action_edit() {
     	_log "Action edit()"
     	local script=$(_getAlias $1)
-	if [ "${script}" = "" ]; then echo "Alias not found"; exit 10; fi;
-	
-	if [ "$DEFAULT_EDITOR" ];
-	then 
-	   $DEFAULT_EDITOR "$script"
-	else 
-	   nano $script
-	fi
+        if [ "${script}" = "" ]; then echo "Alias not found"; exit 10; fi;
+
+        if [ "$DEFAULT_EDITOR" ];
+        then
+            $DEFAULT_EDITOR "$script"
+        else
+            nano $script
+        fi
     }
-    
+
     function _action_cleanup() {
     	_log "Action cleanup()"
-	echo "Are you sure? Y/n"
-    	if [[ "`read u; echo $u`" = [yY] ]]; then  
-	   rm -rf $options_home_dir
-	fi;
+	    echo "Are you sure? Y/n"
+    	if [[ "`read u; echo $u`" = [yY] ]]; then
+	        rm -rf $options_home_dir
+	    fi;
     }
-    
+
     function _action_uninstall() {
     	_log "Action uninstall()"
-	echo "Are you sure? Y/n"
-    	if [[ "`read u; echo $u`" = [yY] ]]; then  
-	   local bshr=$(which bshr)
-	   local bshr_loc=$(readlink $bshr)
-	   rm $bshr
-	   rm -rf $(dirname $bshr_loc)
-	fi;
+	    echo "Are you sure? Y/n"
+    	if [[ "`read u; echo $u`" = [yY] ]]; then
+            local bshr=$(which bshr)
+            local bshr_loc=$(readlink $bshr)
+            rm $bshr
+            rm -rf $(dirname $bshr_loc)
+	    fi;
+    }
+
+    function _action_git_pull() {
+        which git > /dev/null 2>&1
+        _dieOnFail $? "Git doesnt exists"
+
+	    echo "Are you sure? All saved alliases will be lost. [Y/n]"
+    	if [[ "`read u; echo $u`" = [yY] ]]; then
+	        rm -rf $options_home_dir
+	    fi;
+
+        git clone $options_git_pull $options_home_dir
+
+        exit
+    }
+
+    function _action_git_push() {
+        which git > /dev/null 2>&1
+        _dieOnFail $? "Git doesnt exists"
+
+        cd ${options_home_dir}
+
+        if ! [ -d "${options_home_dir}/.git" ];
+        then
+            _log "initialize git..."
+            git init
+            echo "log" >> "${options_home_dir}/.gitignore"
+        fi
+
+        git add -A .
+        git commit -m "Update `date +%F_%H:%M:%S`"
+        git push
+
+        if ! [ $options_git_push = "-" ];
+        then
+            git remote add origin $options_git_push
+            git push -u origin master
+        else
+            git push
+        fi
+
+        exit
     }
 
     if [ $options_help -eq 1 ]; then _action_help; fi;
@@ -321,29 +444,32 @@ Example:
     if [ ! "$options_delete" = "" ]; then _action_remove $options_delete ; fi;
     if [ ! "$options_add" = "" ]; then _action_add $options_add ; fi;
     if [ ! "$options_explain" = "" ]; then _action_explain $options_explain ; fi;
-    if [ $options_update -eq 1 ]; 
-    then 
+    if [ ! "$options_git_push" = "" ]; then _action_git_push ; fi;
+    if [ ! "$options_git_pull" = "" ]; then _action_git_pull ; fi;
+    if [ $options_update -eq 1 ];
+    then
         echo "Updating..."
         _action_update
-	echo "Done updating"
-	exit 
+	    echo "Done updating"
+	    exit
     fi;
-    if [ ! "$options_remote" = "" ]; 
-    then 
-        _action_remote $options_run $options_remote; 
+    if [ ! "$options_remote" = "" ];
+    then
+        _action_remote $options_run $options_remote;
     elif [ ! "$options_run" = "" ];
-    then 
-        _action_run $options_run 
+    then
+        _load_env_vars
+        _action_run $options_run
     fi
-    
+
     if [ "${options_all_args}" = "" ]; then _action_list; fi;
-    
+
 }
 
-#create directories 
+#create directories
 _checkDirectories
 
-#parse input params 
+#parse input params
 _parseParams $@
 
 #process it
@@ -370,6 +496,10 @@ echo "
  options_global_log  = ${options_global_log}
  options_args        = ${options_args}
  options_all_args    = ${options_all_args}
+ options_env_file    = ${options_env_file}
+ options_switch_user = ${options_switch_user}
+ options_git_pull    = ${options_git_pull}
+ options_git_push    = ${options_git_push}
 ";
 fi
 

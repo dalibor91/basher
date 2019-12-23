@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Backuping folders
+# ./backup.sh --target /opt/backup --target "/home/user1,/home/user2"
+
+
 DIRECTORY=/tmp/
 TARGET="/home"
 
@@ -55,6 +59,6 @@ fi;
 installloc=$(date +"%Y_%m_%d_%H_%M_%S")
 installloc="${DIRECTORY}/${installloc}.zip"
 
-echo "zip -rq ${installloc}${chosen}"
+echo "zip --symlinks -rq ${installloc}${chosen}"
 
-zip -rq $installloc $chosen
+zip --symlinks -rq $installloc $chosen

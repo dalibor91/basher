@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# adding user as system user
+# it also creates directories
+# /var/log/{user}
+# /var/lock/{user}
+# /var/lib/{user}
+
+
 CURRENT_USR=$(id -u)
 
 if [ $CURRENT_USR -ne 0 ];
@@ -8,7 +15,7 @@ then
         exit
 fi;
 
-SYS_USER='dalibor_sys'
+SYS_USER='user_sys'
 
 CONF_FILE="${PWD}/${SYS_USER}.conf"
 

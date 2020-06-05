@@ -1,6 +1,8 @@
 # basher
 simple bash program to easy run and add new bash scripts
 
+[![asciicast](https://asciinema.org/a/ZlmhsfVyJdbh37YBqrOP9VhmU.svg)](https://asciinema.org/a/ZlmhsfVyJdbh37YBqrOP9VhmU)
+
 
 install
 

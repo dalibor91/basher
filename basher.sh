@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+# if $BSHR_DIR is set use that 
+# else use $HOME/.bshr 
+options_home_dir="${HOME}/.bshr"
+if ! [ "$BSHR_DIR" = "" ]; 
+then 
+    options_home_dir=$BSHR_DIR
+fi
+
 
 options_add=""
 options_delete=""
@@ -12,7 +20,6 @@ options_help=0
 options_update=0
 options_cleanup=0
 options_uninstall=0
-options_home_dir="${HOME}/.bshr"
 options_scripts_dir="${options_home_dir}/scripts"
 options_aliases_dir="${options_home_dir}/aliases"
 options_describ_dir="${options_home_dir}/describe"
@@ -23,6 +30,7 @@ options_env_file=""
 options_switch_user=""
 options_git_pull=""
 options_git_push=""
+
 
 function _log() {
     local msg=$(date +"[ %Y-%m-%d %H:%M:%S ] ")
